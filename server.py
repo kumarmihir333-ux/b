@@ -5,6 +5,7 @@ import csv
 import hashlib
 import io
 import html
+from html.parser import HTMLParser
 import ipaddress
 import json
 import os
@@ -322,7 +323,7 @@ def init_db() -> None:
 def validate_public_https_url(raw: str) -> str:
     parsed = urllib.parse.urlparse(raw.strip())
     if parsed.scheme != "https" or not parsed.hostname or parsed.username or parsed.password:
-        raise ValueError("Use a public HTTPS URL. Feed sources must be RSS or Atom URLs.")
+        raise ValueError("Use a public HTTPS URL for the publisher homepage or RSS/Atom feed.")
     hostname = parsed.hostname.rstrip(".").lower()
     if hostname == "localhost" or hostname.endswith(".localhost") or hostname.endswith(".local"):
         raise ValueError("Local and private-network addresses are not allowed.")
@@ -378,26 +379,49 @@ def normalize_date(value: str) -> str | None:
     return parsed.astimezone(timezone.utc).isoformat(timespec="seconds").replace("+00:00", "Z")
 
 
-def fetch_feed(url: str) -> list[dict]:
+class FeedDiscoveryParser(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.links = []
+
+    def handle_starttag(self, tag, attrs):
+        if tag.lower() != "link":
+            return
+        values = {key.lower(): value or "" for key, value in attrs}
+        rel = {part.lower() for part in values.get("rel", "").split()}
+        kind = values.get("type", "").lower().split(";", 1)[0].strip()
+        if "alternate" in rel and kind in {"application/rss+xml", "application/atom+xml", "application/rdf+xml", "application/xml", "text/xml"}:
+            href = values.get("href", "").strip()
+            if href:
+                self.links.append(href)
+
+
+def read_public_source(url: str) -> bytes:
     safe_url = validate_public_https_url(url)
     opener = urllib.request.build_opener(SafeRedirect())
-    request = urllib.request.Request(safe_url, headers={"User-Agent": "M11-Source-Reader/1.0 (+local research tool)", "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml;q=0.9"})
+    request = urllib.request.Request(safe_url, headers={"User-Agent": "M11-Source-Reader/1.0 (+local research tool)", "Accept": "application/rss+xml, application/atom+xml, application/xml, text/xml, text/html;q=0.9"})
     with opener.open(request, timeout=12) as response:
         payload = response.read(MAX_FEED_BYTES + 1)
     if len(payload) > MAX_FEED_BYTES:
-        raise ValueError("Feed is larger than the 4 MB safety limit.")
-    root = ET.fromstring(payload)
+        raise ValueError("Source is larger than the 4 MB safety limit.")
+    return payload
+
+
+def parse_feed(payload: bytes, source_url: str) -> list[dict] | None:
+    try:
+        root = ET.fromstring(payload)
+    except ET.ParseError:
+        return None
     root_name = local_name(root.tag)
     if root_name not in {"rss", "rdf", "feed"} and not any(local_name(x.tag) in {"channel", "entry"} for x in root.iter()):
-        raise ValueError("This URL did not return a recognizable RSS or Atom feed.")
-
+        return None
     entries = [node for node in root.iter() if local_name(node.tag) in {"item", "entry"}]
     results = []
     for entry in entries[:120]:
         title = strip_markup(child_text(entry, {"title"}))
         link = child_text(entry, {"link"})
         if link and not link.startswith(("http://", "https://")):
-            link = urllib.parse.urljoin(safe_url, link)
+            link = urllib.parse.urljoin(source_url, link)
         if not title or not link.startswith(("http://", "https://")):
             continue
         guid = child_text(entry, {"guid", "id"}) or link
@@ -405,6 +429,30 @@ def fetch_feed(url: str) -> list[dict]:
         published = normalize_date(child_text(entry, {"pubdate", "published", "updated", "date"}))
         results.append({"guid": guid[:1000], "title": title[:500], "summary": summary, "url": link[:2000], "published_at": published})
     return results
+
+
+def fetch_feed(url: str) -> list[dict]:
+    safe_url = validate_public_https_url(url)
+    payload = read_public_source(safe_url)
+    entries = parse_feed(payload, safe_url)
+    if entries is not None:
+        return entries
+
+    # Allow a public publisher homepage when it advertises an RSS or Atom feed.
+    discoverer = FeedDiscoveryParser()
+    try:
+        discoverer.feed(payload.decode("utf-8", errors="replace"))
+    except Exception:
+        pass
+    for href in discoverer.links[:5]:
+        try:
+            feed_url = validate_public_https_url(urllib.parse.urljoin(safe_url, href))
+            entries = parse_feed(read_public_source(feed_url), feed_url)
+            if entries is not None:
+                return entries
+        except (ValueError, OSError, urllib.error.URLError, ET.ParseError):
+            continue
+    raise ValueError("No RSS or Atom feed was found. Add the publisher's public feed URL, or use a bookmark for reference.")
 
 
 def refresh_source(source: dict) -> tuple[int, str | None]:
