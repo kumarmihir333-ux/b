@@ -1,0 +1,54 @@
+:root{--depth-shadow:0 18px 34px #252b4618;--motion-ease:cubic-bezier(.2,.75,.25,1)}
+body{background-size:130% 130%;animation:ambient-drift 22s ease-in-out infinite alternate}
+.content{perspective:1400px}
+.page-enter{animation:page-arrive .55s var(--motion-ease) both;transform-origin:50% 0}
+.page-head{animation:head-arrive .45s var(--motion-ease) both}
+.hero,.stat-card,.panel,.quick-card,.help-card,.workspace-switch,.page-panel,.upload-zone,.chat-aside,.trust-strip{transform-style:preserve-3d;backface-visibility:hidden}
+.hero{box-shadow:0 22px 48px #15182420;transition:transform .3s var(--motion-ease),box-shadow .3s var(--motion-ease)}
+.hero:hover{transform:translateY(-3px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg));box-shadow:0 28px 54px #1518242c}
+.hero h2,.hero-kicker,.hero p,.hero-buttons{transform:translateZ(16px)}
+.hero h2 span{text-shadow:0 0 22px #dce1f155}
+.hero:after{animation:slow-turn 30s linear infinite;transform-style:preserve-3d}
+.orbit{animation:orbit-turn 17s linear infinite;transform:rotateX(68deg) rotateY(-17deg);transform-style:preserve-3d}
+.orbit:before{transform:rotateZ(58deg) translateZ(9px)}
+.orbit:after{transform:rotateZ(-45deg) translateZ(-8px)}
+.orbit-dot{animation:dot-pulse 3s ease-in-out infinite alternate;box-shadow:0 0 22px #e5e9f866}
+.hero-glyph{animation:glyph-float 4.6s ease-in-out infinite;transform:translateZ(28px);text-shadow:0 8px 35px #e8eafb4c}
+.stat-card,.quick-card,.help-card,.workspace-switch,.page-panel,.upload-zone,.chat-aside{transition:transform .28s var(--motion-ease),box-shadow .28s var(--motion-ease),border-color .28s ease,background .28s ease;transform:translateZ(0)}
+.stat-card:hover,.quick-card:hover,.help-card:hover,.workspace-switch:hover,.page-panel:hover,.upload-zone:hover,.chat-aside:hover{transform:translateY(-4px) rotateX(var(--tilt-x,0deg)) rotateY(var(--tilt-y,0deg)) translateZ(7px);box-shadow:var(--depth-shadow);border-color:#bbc3dc}
+.stat-card:nth-child(1){animation:card-arrive .5s .08s both}.stat-card:nth-child(2){animation:card-arrive .5s .14s both}.stat-card:nth-child(3){animation:card-arrive .5s .2s both}.stat-card:nth-child(4){animation:card-arrive .5s .26s both}
+.stat-icon,.empty-symbol,.quick-icon,.workspace-icon{transform:translateZ(10px);transition:transform .3s var(--motion-ease),box-shadow .3s ease}
+.stat-card:hover .stat-icon,.quick-card:hover .quick-icon,.empty-state:hover .empty-symbol{transform:translateZ(22px) rotateY(12deg) rotateX(8deg);box-shadow:0 8px 18px #65708f22}
+.nav-item{transform:translateZ(0);transition:transform .22s var(--motion-ease),background .22s ease,color .22s ease,box-shadow .22s ease}
+.nav-item:hover{transform:translateX(4px) translateZ(8px);box-shadow:inset 2px 0 #8d96b3}
+.nav-item.active{box-shadow:inset 2px 0 #65708f,0 3px 8px #65708f10}
+.btn{transition:transform .2s var(--motion-ease),box-shadow .2s ease,background .2s ease,border-color .2s ease}
+.btn:hover{transform:translateY(-2px) translateZ(8px);box-shadow:0 8px 18px #252b4620}
+.btn:active{transform:translateY(1px) scale(.97);box-shadow:none}
+.brand-mark{transition:transform .35s var(--motion-ease),box-shadow .35s ease;box-shadow:0 5px 14px #08090b26}
+.brand:hover .brand-mark{transform:rotateY(180deg) rotateX(12deg);box-shadow:0 10px 24px #65708f40}
+.top-avatar,.avatar{transition:transform .25s var(--motion-ease),box-shadow .25s ease}
+.top-avatar:hover,.avatar:hover{transform:translateY(-2px) rotateY(18deg) scale(1.08);box-shadow:0 7px 15px #65708f30}
+.icon-button:hover{transform:translateY(-2px) rotateY(18deg) scale(1.1);transition:transform .2s var(--motion-ease)}
+.language:hover .chevron{display:inline-block;transform:rotateX(180deg);transition:transform .25s}
+.file-row{transition:transform .22s var(--motion-ease),box-shadow .22s ease,border-color .22s ease;transform-style:preserve-3d}
+.file-row:hover{transform:translateX(3px) translateZ(5px);border-color:#c7cde0;box-shadow:0 7px 16px #252b4610}
+.message{animation:message-arrive .32s var(--motion-ease) both;transform-origin:bottom left}
+.message.user{transform-origin:bottom right}
+.empty-symbol{animation:soft-float 4s ease-in-out infinite}
+.toast{transform:translate(-50%,15px) perspective(500px) rotateX(-12deg);transition:opacity .22s ease,transform .32s var(--motion-ease)}
+.toast.show{transform:translate(-50%,0) perspective(500px) rotateX(0)}
+.status-dot{box-shadow:0 0 0 0 #8b91aa80;animation:status-pulse 2.5s infinite}
+@keyframes page-arrive{from{opacity:0;transform:rotateX(-2deg) translateY(12px)}to{opacity:1;transform:rotateX(0) translateY(0)}}
+@keyframes head-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes card-arrive{from{opacity:0;transform:translateY(10px) rotateX(-5deg)}to{opacity:1;transform:translateY(0) rotateX(0)}}
+@keyframes message-arrive{from{opacity:0;transform:translateY(7px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes glyph-float{0%,100%{transform:translate3d(0,0,28px) rotateY(-8deg)}50%{transform:translate3d(0,-8px,36px) rotateY(8deg)}}
+@keyframes soft-float{0%,100%{transform:translateY(0) rotateX(0)}50%{transform:translateY(-3px) rotateX(9deg)}}
+@keyframes orbit-turn{from{transform:rotateX(68deg) rotateY(-17deg) rotateZ(0)}to{transform:rotateX(68deg) rotateY(-17deg) rotateZ(360deg)}}
+@keyframes slow-turn{from{transform:rotateZ(0)}to{transform:rotateZ(360deg)}}
+@keyframes dot-pulse{from{transform:scale(.85) translateZ(0);opacity:.7}to{transform:scale(1.15) translateZ(10px);opacity:1}}
+@keyframes ambient-drift{from{background-position:0% 0%,0% 0%,center}to{background-position:100% 35%,40% 100%,center}}
+@keyframes status-pulse{0%{box-shadow:0 0 0 0 #8b91aa70}70%{box-shadow:0 0 0 6px #8b91aa00}100%{box-shadow:0 0 0 0 #8b91aa00}}
+@media(hover:hover) and (pointer:fine){.hero,.stat-card,.quick-card,.help-card,.workspace-switch,.page-panel,.upload-zone,.chat-aside{will-change:transform}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;transition-delay:0ms!important;will-change:auto!important}}

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#143d33" />
+  <meta name="description" content="M11 AI — Bihar's Development Intelligence" />
+  <title>M11 AI — Bihar's Development Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="motion.css" />
+  <link rel="stylesheet" href="signals.css" />
+  <link rel="stylesheet" href="data.css" />
+  <link rel="stylesheet" href="patterns.css" />
+  <link rel="stylesheet" href="event-analysis.css" />
+  <link rel="stylesheet" href="lusion-theme.css" />
+  <link rel="stylesheet" href="radar.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#home" aria-label="M11 AI home">
+        <span class="brand-mark">M<span>11</span></span>
+        <span class="brand-copy"><b>M11 AI</b><small>BRaiN Foundation</small></span>
+      </a>
+      <div class="workspace-switch"><span class="workspace-icon">✳</span><span><small>WORKSPACE</small><b>Public intelligence</b></span><span class="chevron">⌄</span></div>
+      <div class="nav-label">PLATFORM</div>
+      <nav class="main-nav" aria-label="Main navigation">
+        <button class="nav-item active" data-page="home"><span class="nav-icon">⌂</span>Overview</button>
+        <button class="nav-item" data-page="research"><span class="nav-icon">⌕</span>Research <span class="nav-tag">AI</span></button>
+        <button class="nav-item" data-page="signals"><span class="nav-icon">◎</span>Signals &amp; archive <span class="nav-tag">LIVE</span></button>
+        <button class="nav-item" data-page="patterns"><span class="nav-icon">⌁</span>Pattern engine <span class="nav-tag">NEW</span></button>
+        <button class="nav-item" data-page="radar"><span class="nav-icon">⌖</span>Opportunity &amp; risk radar</button>
+        <button class="nav-item" data-page="eventanalysis"><span class="nav-icon">⊙</span>Event analysis</button>
+        <button class="nav-item" data-page="library"><span class="nav-icon">▤</span>Source library</button>
+        <button class="nav-item" data-page="data"><span class="nav-icon">▥</span>Development data</button>
+        <button class="nav-item" data-page="catalog"><span class="nav-icon">▧</span>Data catalog</button>
+        <button class="nav-item" data-page="graph"><span class="nav-icon">⌘</span>Ontology graph</button>
+        <button class="nav-item" data-page="governance"><span class="nav-icon">◉</span>Review &amp; alerts</button>
+        <button class="nav-item" data-page="policy"><span class="nav-icon">◫</span>Policy studio</button>
+        <button class="nav-item" data-page="monitor"><span class="nav-icon">◷</span>Monitor</button>
+        <button class="nav-item" data-page="studio"><span class="nav-icon">✎</span>Report studio</button>
+      </nav>
+      <div class="nav-label workspace-label">YOUR SPACE</div>
+      <nav class="main-nav"><button class="nav-item" data-page="private"><span class="nav-icon">▣</span>Private workspace <span class="lock">⌑</span></button></nav>
+      <div class="sidebar-bottom">
+        <div class="help-card"><span class="help-spark">✳</span><b>Evidence first.</b><p>Every insight should lead back to a source.</p><button data-page="library">Explore the library <span>↗</span></button></div>
+        <div class="profile"><div class="avatar">G</div><div><b>Guest researcher</b><small>Public access</small></div><button aria-label="Profile options">···</button></div>
+        <div class="foundation">An initiative of <b>BRaiN Foundation</b></div>
+      </div>
+    </aside>
+    <main class="main-area">
+      <header class="topbar"><button class="mobile-menu" id="mobileMenu" aria-label="Open menu">☰</button><div class="breadcrumbs"><span>Workspace</span><i>/</i><b id="crumb">Overview</b></div><div class="top-actions"><button class="language" id="language"><span>अ</span> English <span class="chevron">⌄</span></button><button class="icon-button" aria-label="Notifications">♧<i></i></button><div class="top-avatar">G</div></div></header>
+      <div class="content" id="content"></div>
+      <footer><span>© 2026 BRaiN Foundation</span><span><span class="status-dot"></span> Public intelligence workspace</span><a href="#about">About M11 AI</a></footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status"></div>
+  <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.csv" multiple hidden />
+  <script src="app.js"></script>
+</body>
+</html>

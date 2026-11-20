@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://m11.local/schemas/world-model-event-1.0.0.json",
+  "title": "M11 World Model Event Assessment",
+  "description": "Versioned event, claim, entity, relationship, hypothesis, and provenance record. Entries are drafts until reviewed against their sources.",
+  "type": "object",
+  "required": ["record_type", "schema_version", "record_id", "created_at", "review_status", "event", "entities", "claims", "relationships", "hypotheses", "analysis", "needs_review"],
+  "properties": {
+    "record_type": {"const": "m11.world_model.event_assessment"},
+    "schema_version": {"const": "1.0.0"},
+    "record_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "review_status": {"enum": ["draft", "in_review", "approved", "rejected"]},
+    "event": {
+      "type": "object",
+      "required": ["id", "label", "temporal_scope"],
+      "properties": {
+        "id": {"type": "string"},
+        "label": {"type": "string"},
+        "place": {"type": ["string", "null"]},
+        "temporal_scope": {"type": "object", "properties": {"start": {"type": ["string", "null"]}, "end": {"type": ["string", "null"]}}, "additionalProperties": false},
+        "key_question": {"type": ["string", "null"]},
+        "summary": {"type": ["string", "null"]}
+      },
+      "additionalProperties": true
+    },
+    "entities": {"type": "array", "items": {"type": "object", "required": ["id", "label", "type"], "properties": {"id": {"type": "string"}, "label": {"type": "string"}, "type": {"type": "string"}, "role": {"type": "string"}, "review_status": {"type": "string"}}, "additionalProperties": true}},
+    "claims": {"type": "array", "items": {"type": "object", "required": ["id", "claim", "epistemic_status", "source", "review_status"], "properties": {"id": {"type": "string"}, "claim": {"type": "string"}, "epistemic_status": {"enum": ["observed", "reported", "inferred", "needs_review"]}, "source": {"type": "object", "properties": {"title": {"type": "string"}, "url": {"type": "string"}, "period": {"type": "string"}}, "additionalProperties": true}, "confidence": {"type": ["string", "null"], "enum": ["low", "moderate", "high", null]}, "review_status": {"type": "string"}}, "additionalProperties": true}},
+    "relationships": {"type": "array", "items": {"type": "object", "required": ["id", "subject_id", "predicate", "object_id", "epistemic_status", "evidence_ids", "review_status"], "properties": {"id": {"type": "string"}, "subject_id": {"type": "string"}, "predicate": {"type": "string"}, "object_id": {"type": "string"}, "epistemic_status": {"enum": ["observed", "reported", "hypothesis", "needs_review"]}, "temporal_scope": {"type": "string"}, "evidence_ids": {"type": "array", "items": {"type": "string"}}, "confidence": {"type": ["number", "null"]}, "review_status": {"type": "string"}}, "additionalProperties": true}},
+    "hypotheses": {"type": "array", "items": {"type": "object", "required": ["id", "claim", "status", "review_status"], "properties": {"id": {"type": "string"}, "claim": {"type": "string"}, "status": {"const": "analyst_hypothesis"}, "evidence_comparison_notes": {"type": "string"}, "review_status": {"type": "string"}}, "additionalProperties": true}},
+    "analysis": {"type": "object", "description": "Human-authored assessment notes, separate from sourced claims and graph relationships.", "additionalProperties": true},
+    "needs_review": {"type": "array", "items": {"type": "object", "required": ["line", "raw", "reason"], "properties": {"line": {"type": "integer"}, "raw": {"type": "string"}, "reason": {"type": "string"}}, "additionalProperties": false}}
+  },
+  "additionalProperties": true
+}
